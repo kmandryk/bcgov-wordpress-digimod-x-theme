@@ -29,7 +29,7 @@ jobs:
     
     - name: Deploy theme
       run: |
-        export THEME_NAME="bc-gov-x-theme"
+        export THEME_NAME="bcgov-wordpress-block-theme"
         export NAMESPACE="c0cce6-dev"
         export WORDPRESS_POD_NAME=$(oc get pods -n $NAMESPACE -l  app.kubernetes.io/part-of=wp-git-deploy-dev,role=nginx -o jsonpath='{.items[0].metadata.name}')
         export WORDPRESS_CONTAINER_NAME=$(oc get pods -n $NAMESPACE $WORDPRESS_POD_NAME -o jsonpath='{.spec.containers[0].name}')
