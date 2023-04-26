@@ -92,12 +92,12 @@ jobs:
         oc cp --no-preserve digitalgovernment.WordPress.2023-04-21.xml $NAMESPACE/$WORDPRESS_POD_NAME:/tmp/wordpress-export.xml -c $WORDPRESS_CONTAINER_NAME
 
         # Copy wp-cli to the WordPress instance
-        oc cp --no-preserve wp-cli.phar $NAMESPACE/$WORDPRESS_POD_NAME:/tmp/wp-cli.phar -c $WORDPRESS_CONTAINER_NAME
-        oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- chmod +x /tmp/wp-cli.phar 
-        oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- php /tmp/wp-cli.phar core install --url=wp-git-deploy-dev.apps.silver.devops.gov.bc.ca --title="digital.gov.bc.ca Testing Framework" --admin_user=secrets.WP_TEST_USER --admin_password=secrets.WP_TEST_PASSWORD --admin_email=info@example.com
-        oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- php /tmp/wp-cli.phar plugin install wordpress-importer --activate
+        #oc cp --no-preserve wp-cli.phar $NAMESPACE/$WORDPRESS_POD_NAME:/tmp/wp-cli.phar -c $WORDPRESS_CONTAINER_NAME
+        #oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- chmod +x /tmp/wp-cli.phar 
+        #oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- php /tmp/wp-cli.phar core install --url=wp-git-deploy-dev.apps.silver.devops.gov.bc.ca --title="digital.gov.bc.ca Testing Framework" --admin_user=secrets.WP_TEST_USER --admin_password=secrets.WP_TEST_PASSWORD --admin_email=info@example.com
+        #oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- php /tmp/wp-cli.phar plugin install wordpress-importer --activate
         # Run the wp-cli import command
-        oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- php /tmp/wp-cli.phar import /tmp/wordpress-export.xml --authors=create --allow-root
+        #oc exec -n $NAMESPACE -c $WORDPRESS_CONTAINER_NAME $WORDPRESS_POD_NAME -- php /tmp/wp-cli.phar import /tmp/wordpress-export.xml --authors=create --allow-root
 
     - name: Deploy theme
       run: |
