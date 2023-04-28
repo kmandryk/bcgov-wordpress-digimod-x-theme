@@ -50,10 +50,10 @@ jobs:
       run: |
         export NAMESPACE="c0cce6-dev"
         export WORDPRESS_POD_NAME=$(oc get pods -n $NAMESPACE -l app.kubernetes.io/part-of=wp-git-deploy-dev,role=nginx -o jsonpath='{.items[0].metadata.name}')
+        export WORDPRESS_CONTAINER_NAME=$(oc get pods -n $NAMESPACE $WORDPRESS_POD_NAME -o jsonpath='{.spec.containers[0].name}')
         oc wait --for=condition=Ready pod/$WORDPRESS_POD_NAME -n $NAMESPACE --timeout=5m
         # Wait for the WordPress container to be created
         while true; do
-          WORDPRESS_CONTAINER_NAME=$(oc get pods -n $NAMESPACE $WORDPRESS_POD_NAME -o jsonpath='{.spec.containers[0].name}')
           if [ -n "$WORDPRESS_CONTAINER_NAME" ]; then
             break
           fi
@@ -80,10 +80,6 @@ jobs:
 
     - name: Import WordPress XML file
       run: |
-        export NAMESPACE="c0cce6-dev"
-        export WORDPRESS_POD_NAME=$(oc get pods -n $NAMESPACE -l  app.kubernetes.io/part-of=wp-git-deploy-dev,role=nginx -o jsonpath='{.items[0].metadata.name}')
-        export WORDPRESS_CONTAINER_NAME=$(oc get pods -n $NAMESPACE $WORDPRESS_POD_NAME -o jsonpath='{.spec.containers[0].name}')
-    
         # Download wp-cli in the GitHub Actions workspace
         curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
         chmod +x wp-cli.phar
@@ -102,8 +98,5 @@ jobs:
     - name: Deploy theme
       run: |
         export THEME_NAME="bc-gov-x-theme"
-        export NAMESPACE="c0cce6-dev"
-        export WORDPRESS_POD_NAME=$(oc get pods -n $NAMESPACE -l app=wordpress-git-deploy,role=nginx -o jsonpath='{.items[0].metadata.name}')
-        export WORDPRESS_CONTAINER_NAME=$(oc get pods -n $NAMESPACE $WORDPRESS_POD_NAME -o jsonpath='{.spec.containers[0].name}')
         composer install
         oc cp --no-preserve . $NAMESPACE/$WORDPRESS_POD_NAME:/var/www/html/wp-content/themes/$THEME_NAME -c $WORDPRESS_CONTAINER_NAME
